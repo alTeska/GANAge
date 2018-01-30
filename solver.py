@@ -167,9 +167,14 @@ class Solver(object):
             if self.use_labels:
                 g_loss = criterion(out, m_labels) 
             else:
-                g_loss = torch.mean((out-1)**2) 
+                #g_loss = torch.mean((out-1)**2) 
+                g_loss = torch.mean((out)**2) 
 
             if self.use_reconst_loss:
+                #print(reconst_mnist.size())
+                #print(fake_svhn.size())
+                #-0print(mnist.size())
+                
                 g_loss += torch.mean((mnist - reconst_mnist)**2)
 
             g_loss.backward()
@@ -183,7 +188,8 @@ class Solver(object):
             if self.use_labels:
                 g_loss = criterion(out, s_labels) 
             else:
-                g_loss = torch.mean((out-1)**2) 
+                #g_loss = torch.mean((out-1)**2) 
+                g_loss = torch.mean((out)**2) 
 
             if self.use_reconst_loss:
                 g_loss += torch.mean((svhn - reconst_svhn)**2)
@@ -216,7 +222,7 @@ class Solver(object):
                 scipy.misc.imsave(path, merged)
                 print ('saved %s' %path)
             
-            if (step+1) % 5000 == 0:
+            if (step+1) % 2000 == 0:
                 # save the model parameters for each epoch
                 g12_path = os.path.join(self.model_path, 'g12-%d.pkl' %(step+1))
                 g21_path = os.path.join(self.model_path, 'g21-%d.pkl' %(step+1))
