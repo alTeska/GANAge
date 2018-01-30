@@ -27,7 +27,7 @@ class SegmentationNN(nn.Module):
         self.up3 = segnetUp3(256, 128)
         self.up2 = segnetUp2(128, 64)
         self.up1 = segnetUp2(64, n_classes)
-        self.out = segnetOut(n_classes, 1)
+        self.out = segnetOut(n_classes, 3)
 
     def forward(self, inputs):
 
