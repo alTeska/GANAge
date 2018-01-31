@@ -167,8 +167,8 @@ class Solver(object):
             if self.use_labels:
                 g_loss = criterion(out, m_labels) 
             else:
-                #g_loss = torch.mean((out-1)**2) 
-                g_loss = torch.mean((out)**2) 
+                g_loss = torch.mean((out-1)**2) 
+                #g_loss = torch.mean((out)**2) 
 
             if self.use_reconst_loss:
                 #print(reconst_mnist.size())
@@ -188,8 +188,8 @@ class Solver(object):
             if self.use_labels:
                 g_loss = criterion(out, s_labels) 
             else:
-                #g_loss = torch.mean((out-1)**2) 
-                g_loss = torch.mean((out)**2) 
+                g_loss = torch.mean((out-1)**2) 
+                #g_loss = torch.mean((out)**2) 
 
             if self.use_reconst_loss:
                 g_loss += torch.mean((svhn - reconst_svhn)**2)
@@ -212,6 +212,8 @@ class Solver(object):
                 mnist, fake_mnist = self.to_data(fixed_mnist), self.to_data(fake_mnist)
                 svhn , fake_svhn = self.to_data(fixed_svhn), self.to_data(fake_svhn)
                 
+                print(mnist.shape)
+                print(fake_svhn.shape)
                 merged = self.merge_images(mnist, fake_svhn)
                 path = os.path.join(self.sample_path, 'sample-%d-m-s.png' %(step+1))
                 scipy.misc.imsave(path, merged)
