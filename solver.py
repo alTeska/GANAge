@@ -32,7 +32,7 @@ class Solver(object):
         self.train_iters = config.train_iters
         self.batch_size = config.batch_size
         self.lr = config.lr
-        self.log_step = config.log_step
+        self.log_step = tconfig.log_step
         self.sample_step = config.sample_step
         self.sample_path = config.sample_path
         self.model_path = config.model_path
@@ -47,6 +47,15 @@ class Solver(object):
         
         g_params = list(self.g12.parameters()) + list(self.g21.parameters())
         d_params = list(self.d1.parameters()) + list(self.d2.parameters())
+        
+        state_G12 = torch.load('models/g12-2000.pkl')
+        state_G21 = torch.load('models/g21-2000.pkl')
+        state_d1 = torch.load('models/d1-2000.pkl')
+        state_d2 = torch.load('models/d2-2000.pkl')
+        self.g12.load_state_dict(state_G12)
+        self.g21.load_state_dict(state_G21)
+        self.d1.load_state_dict(state_d1)
+        self.d2.load_state_dict(state_d2) 
         
         self.g_optimizer = optim.Adam(g_params, self.lr, [self.beta1, self.beta2])
         self.d_optimizer = optim.Adam(d_params, self.lr, [self.beta1, self.beta2])
@@ -67,6 +76,10 @@ class Solver(object):
             merged[:, i*h:(i+1)*h, (j*2)*h:(j*2+1)*h] = s
             merged[:, i*h:(i+1)*h, (j*2+1)*h:(j*2+2)*h] = t
         return merged.transpose(1, 2, 0)
+    
+    def scale_images(self, val):
+        val = (val-np.min(val))/np.max(val)
+        return val
     
     def to_var(self, x):
         """Converts numpy to variable."""
@@ -94,6 +107,9 @@ class Solver(object):
         fixed_svhn = self.to_var(svhn_iter.next()[0])
         fixed_mnist = self.to_var(mnist_iter.next()[0])
         
+        #print(fixed_svhn)
+        #print(fixed_mnist)
+
         # loss if use_labels = True
         criterion = nn.CrossEntropyLoss()
         
@@ -214,13 +230,13 @@ class Solver(object):
                 
                 print(mnist.shape)
                 print(fake_svhn.shape)
-                merged = self.merge_images(mnist, fake_svhn)
-                path = os.path.join(self.sample_path, 'sample-%d-m-s.png' %(step+1))
+                merged = self.merge_images(self.scale_images(mnist), self.scale_images(fake_svhn))
+                path = os.path.join(self.sample_path, 'sample-%d-y-fo.png' %(step+1))
                 scipy.misc.imsave(path, merged)
                 print ('saved %s' %path)
                 
-                merged = self.merge_images(svhn, fake_mnist)
-                path = os.path.join(self.sample_path, 'sample-%d-s-m.png' %(step+1))
+                merged = self.merge_images(self.scale_images(svhn), self.scale_images(fake_mnist))
+                path = os.path.join(self.sample_path, 'sample-%d-o-fy.png' %(step+1))
                 scipy.misc.imsave(path, merged)
                 print ('saved %s' %path)
             
