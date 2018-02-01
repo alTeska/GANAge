@@ -32,7 +32,7 @@ class Solver(object):
         self.train_iters = config.train_iters
         self.batch_size = config.batch_size
         self.lr = config.lr
-        self.log_step = tconfig.log_step
+        self.log_step = config.log_step
         self.sample_step = config.sample_step
         self.sample_path = config.sample_path
         self.model_path = config.model_path
@@ -104,9 +104,11 @@ class Solver(object):
         iter_per_epoch = min(len(svhn_iter), len(mnist_iter))
         
         # fixed mnist and svhn for sampling
-        fixed_svhn = self.to_var(svhn_iter.next()[0])
-        fixed_mnist = self.to_var(mnist_iter.next()[0])
+        fixed_svhn_temp  = svhn_iter.next()
+        fixed_mnist_temp = mnist_iter.next()
         
+        fixed_svhn = self.to_var(fixed_svhn_temp[0])
+        fixed_mnist= self.to_var(fixed_mnist_temp[0])
         #print(fixed_svhn)
         #print(fixed_mnist)
 
@@ -222,8 +224,12 @@ class Solver(object):
 
             # save the sampled images
             if (step+1) % self.sample_step == 0:
+                print(fixed_svhn_temp[1])
+                print(fixed_mnist_temp[1])
+                
                 fake_svhn = self.g12(fixed_mnist)
                 fake_mnist = self.g21(fixed_svhn)
+                
                 
                 mnist, fake_mnist = self.to_data(fixed_mnist), self.to_data(fake_mnist)
                 svhn , fake_svhn = self.to_data(fixed_svhn), self.to_data(fake_svhn)

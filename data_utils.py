@@ -94,7 +94,7 @@ class FaceWiki(data.Dataset):
         to_tensor = transforms.ToTensor()
         img_folder = self.image_folders[index]
 
-        img = Image.open(os.path.join(self.root_dir_name, img_folder)).convert('RGB')
+        img = Image.open(os.path.join(self.root_dir_name, img_folder[:-1])).convert('RGB')
         grayscale = transforms.Grayscale()
         resize = transforms.Resize((200,200))
 #       img = grayscale(img)
