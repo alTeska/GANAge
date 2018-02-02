@@ -1,3 +1,8 @@
+"""
+@author: Monkey-PC
+Modified for ConvAge project
+"""
+
 import argparse
 import os
 from solver import Solver
@@ -9,16 +14,15 @@ def str2bool(v):
 
 def main(config):
     svhn_loader, mnist_loader = get_loader(config)
-    
     solver = Solver(config, svhn_loader, mnist_loader)
-    cudnn.benchmark = True 
-    
+    cudnn.benchmark = True
+
     # create directories if not exist
     if not os.path.exists(config.model_path):
         os.makedirs(config.model_path)
     if not os.path.exists(config.sample_path):
         os.makedirs(config.sample_path)
-    
+
     if config.mode == 'train':
         solver.train()
     elif config.mode == 'sample':
@@ -27,7 +31,7 @@ def main(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
+
     # model hyper-parameters
     parser.add_argument('--image_size', type=int, default=200)
     parser.add_argument('--g_conv_dim', type=int, default=64)
@@ -35,7 +39,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_reconst_loss', required=True, type=str2bool)
     parser.add_argument('--use_labels', required=True, type=str2bool)
     parser.add_argument('--num_classes', type=int, default=10)
-    
+
     # training hyper-parameters
     parser.add_argument('--train_iters', type=int, default=40000)
     parser.add_argument('--batch_size', type=int, default=4)
@@ -43,7 +47,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=0.0002)
     parser.add_argument('--beta1', type=float, default=0.5)
     parser.add_argument('--beta2', type=float, default=0.999)
-    
+
     # misc
     parser.add_argument('--mode', type=str, default='train')
     parser.add_argument('--model_path', type=str, default='./models')

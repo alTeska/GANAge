@@ -1,19 +1,11 @@
+"""
+Created for ConvAge project
+"""
 import torch
-from torchvision import datasets
-from torchvision import transforms
 from data_utils import FaceWiki
-
 
 def get_loader(config):
     """Builds and returns Dataloader for MNIST and SVHN dataset."""
-
-#    transform = transforms.Compose([
-#                    transforms.Scale(config.image_size),
-#                    transforms.ToTensor(),
-#                    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-#
-#    svhn = datasets.SVHN(root=config.svhn_path, download=True, transform=transform)
-#    mnist = datasets.MNIST(root=config.mnist_path, download=True, transform=transform)
 
     old = FaceWiki(image_paths_file='LAG/train/younglist.txt')
     young = FaceWiki(image_paths_file='LAG/train/oldlist.txt')
