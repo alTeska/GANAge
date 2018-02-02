@@ -7,8 +7,8 @@ from data_utils import FaceWiki
 def get_loader(config):
     """Builds and returns Dataloader for MNIST and SVHN dataset."""
 
-    old = FaceWiki(image_paths_file='LAG/train/younglist.txt')
-    young = FaceWiki(image_paths_file='LAG/train/oldlist.txt')
+    old = FaceWiki(image_paths_file='imbd/train/younglist.txt')
+    young = FaceWiki(image_paths_file='imbd/train/oldlist.txt')
 
     svhn_loader = torch.utils.data.DataLoader(old,
                                               batch_size=config.batch_size,

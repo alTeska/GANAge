@@ -3,8 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
-
 class SegmentationNN(nn.Module):
 
     def __init__(self, n_classes=256, in_channels=3, is_unpooling=True):
@@ -219,7 +217,7 @@ class deconv2DBatchNormRelu(nn.Module):
     def forward(self, inputs):
         outputs = self.dcbr_unit(inputs)
         return outputs
-    
+
 class segnetOut(nn.Module):
     def __init__(self, in_size, out_size):
         super(segnetOut, self).__init__()
